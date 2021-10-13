@@ -153,9 +153,4 @@ def FeatureExtracting_MU(PersonData):
 
 
 
-dictionary = ReadfilesFrimDir_CSV('test1')
 
-for i in range(len(dictionary)):
-    # d ,d1,d2,d3 = FeatureExtracting_MS(dictionary[i]), FeatureExtracting_MA(dictionary[i]),FeatureExtracting_CD(dictionary[i]),FeatureExtracting_CN(dictionary[i])
-    # print('v =',d,'a =',d1,'время нажатий =',d2,'количество нажатий =',d3)
-    print(i+1," пользователь MA =",FeatureExtracting_MU(dictionary[i]))
