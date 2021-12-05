@@ -1,0 +1,86 @@
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import metrics
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+import pandas as pd
+from FileHandler import ReadFiles_JSON
+
+
+
+
+def 𝑲_Nearest_Neighbors():
+    date = ReadFiles_JSON('features')
+    date = date.dropna(thresh=12)
+
+    values = {"FeatureExtracting_CD": date["FeatureExtracting_CD"].mean(),
+              'FeatureExtracting_CN': date["FeatureExtracting_CN"].mean(),
+              'FeatureExtracting_MA': date["FeatureExtracting_MA"].mean(),
+              'FeatureExtracting_MA': date["FeatureExtracting_MA"].mean(),
+              'FeatureExtracting_MD': date["FeatureExtracting_MD"].mean(),
+              'FeatureExtracting_ME': date["FeatureExtracting_ME"].mean(),
+              'FeatureExtracting_MS': date["FeatureExtracting_MS"].mean(),
+              'FeatureExtracting_MSD135': date["FeatureExtracting_MSD135"].mean(),
+              'FeatureExtracting_MSD360': date["FeatureExtracting_MSD360"].mean(),
+              'FeatureExtracting_MSD45': date["FeatureExtracting_MSD45"].mean(),
+              'FeatureExtracting_MSD90': date["FeatureExtracting_MSD90"].mean(),
+              'FeatureExtracting_MU': date["FeatureExtracting_MU"].mean(),
+              'FeatureExtracting_OL': date["FeatureExtracting_OL"].mean(),
+              'FeatureExtracting_ON': date["FeatureExtracting_ON"].mean(), }
+    date =date.fillna(value= values)
+
+    x_data = date.drop(['Person'],axis=1)
+    y_data = date['Person']
+    MinMaxScaler = preprocessing.MinMaxScaler()
+    X_data_minmax = MinMaxScaler.fit_transform(x_data)
+    data = pd.DataFrame(X_data_minmax, columns=['Длительность нажатия', 'Количество нажатий', 'Ускорение движения мыши', 'Замедление движения', 'Эффективность движения','Скорость нажатия',
+                                                'Угловая скорость 135', 'Угловая скорость 360', 'Угловая скорость 45','Угловая скорость 90','Равномерность движения','Длина промаха','Число промахов'])
+    X_train, X_test, y_train, y_test = train_test_split(data, y_data, test_size=0.2, random_state=1)
+    knn_clf = KNeighborsClassifier()
+    knn_clf.fit(X_train, y_train)
+    ypred = knn_clf.predict(X_test)
+    result = confusion_matrix(y_test, ypred)
+    print('Confusion Matrix:')
+    print(result)
+    result1 = classification_report(y_test, ypred)
+    print('Classification Report:', )
+    print(result1)
+    result2 = accuracy_score(y_test, ypred)
+    print('Accuracy:', result2)
+
+#print(𝑲_Nearest_Neighbors())
+
+def tree():
+    date = ReadFiles_JSON('features')
+    date = date.dropna(thresh=12)
+
+    values = {"FeatureExtracting_CD": date["FeatureExtracting_CD"].mean(),
+              'FeatureExtracting_CN': date["FeatureExtracting_CN"].mean(),
+              'FeatureExtracting_MA': date["FeatureExtracting_MA"].mean(),
+              'FeatureExtracting_MA': date["FeatureExtracting_MA"].mean(),
+              'FeatureExtracting_MD': date["FeatureExtracting_MD"].mean(),
+              'FeatureExtracting_ME': date["FeatureExtracting_ME"].mean(),
+              'FeatureExtracting_MS': date["FeatureExtracting_MS"].mean(),
+              'FeatureExtracting_MSD135': date["FeatureExtracting_MSD135"].mean(),
+              'FeatureExtracting_MSD360': date["FeatureExtracting_MSD360"].mean(),
+              'FeatureExtracting_MSD45': date["FeatureExtracting_MSD45"].mean(),
+              'FeatureExtracting_MSD90': date["FeatureExtracting_MSD90"].mean(),
+              'FeatureExtracting_MU': date["FeatureExtracting_MU"].mean(),
+              'FeatureExtracting_OL': date["FeatureExtracting_OL"].mean(),
+              'FeatureExtracting_ON': date["FeatureExtracting_ON"].mean(), }
+    date = date.fillna(value=values)
+
+    X = date.drop(['Person'],axis=1)
+    y = date['Person']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+    clf = DecisionTreeClassifier()
+
+    clf = clf.fit(X_train, y_train)
+
+    y_pred = clf.predict(X_test)
+    print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+
+
+#print(tree())
