@@ -1,7 +1,7 @@
 import  os
 import  csv
 import json
-
+import pandas as pd
 
 def ReadFilesFromDir_CSV(dirName="data"):
     data = []
@@ -46,4 +46,22 @@ def WriteFeaturesToFiles_JSON(features, dirName="features"):
     for i in range(0,len(features)):
         name = pathToDir + str(i) + ".json"
         with open(name, "w") as jsonFile:
-            json.dump(features[i], jsonFile)
+            json.dump(features[i], jsonFile,sort_keys= True, indent=4)
+
+
+
+def ReadFiles_JSON(dirName):
+    date = []
+    list = os.listdir(dirName)
+    number_files = len(list)
+
+    for i in list:
+        pd_json = pd.read_json(f'C:\\Users\\danya\\PycharmProjects\\mephi_mouse\\features\\{i}', orient='index')
+        pd_json = pd_json.T
+
+        date.append(pd_json)
+
+    result = pd.concat(date)
+    result.reset_index(drop=True, inplace=True)
+    result =result.dropna(axis=1, how = 'all')
+    return result
